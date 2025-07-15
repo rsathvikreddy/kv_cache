@@ -67,6 +67,45 @@ g++ src/client.cpp -o client -lws2_32
     ```
     The client will connect to the server, and you can start sending commands.
 
+### Architecture
+
+```mermaid
+graph TD
+    subgraph Clients
+        Client1["🖥️ Client 1"]
+        Client2["🖥️ Client 2"]
+        Client3["🖥️ Client 3"]
+    end
+
+    subgraph Server["🧠 Multi-threaded TCP Server"]
+        TCPServer["🔌 TCP Listener"]
+        Thread1["🧵 Thread 1"]
+        Thread2["🧵 Thread 2"]
+        Thread3["🧵 Thread N"]
+
+        TCPServer --> Thread1
+        TCPServer --> Thread2
+        TCPServer --> Thread3
+
+        subgraph KVStore["📦 Singleton KVStore"]
+            Mutex["🔒 std::shared_mutex"]
+            Data["📚 std::unordered_map"]
+            Persistence["💾 kvstore.db"]
+        end
+
+        Thread1 -->|put/get/delete| Mutex
+        Thread2 -->|put/get/delete| Mutex
+        Thread3 -->|put/get/delete| Mutex
+
+        Mutex <--> Data
+        Mutex <--> Persistence
+    end
+
+    Client1 -->|put name john| TCPServer
+    Client2 -->|get name| TCPServer
+    Client3 -->|delete name| TCPServer
+```
+
 ## How to Use
 
 The client provides a simple command-line interface. Enter commands in the format `<command> <key> [value]`.
