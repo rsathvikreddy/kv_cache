@@ -1,0 +1,25 @@
+# Executables
+*.exe
+server
+client
+
+# Object files
+*.o
+
+# Database files
+*.db
+
+# Build directories
+build/
+bin/
+
+# IDE files
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

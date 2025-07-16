@@ -19,55 +19,76 @@ This project was developed to demonstrate core software engineering principles, 
 
 ## Technology Stack
 
-*   **Language**: C++
-*   **Networking**: Winsock2 API for TCP socket programming on Windows.
-*   **Concurrency**: C++ Standard Library (`<thread>`, `<shared_mutex>`).
+*   **Language**: C++ (C++17)
+*   **Networking**: Winsock2 API (Windows) / Sockets (`-pthread` for Linux/macOS)
+*   **Concurrency**: C++ Standard Library (`<thread>`, `<shared_mutex>`)
+*   **Build System**: `make`
 *   **Data Structures**: `std::unordered_map` for efficient O(1) average time complexity on key lookups.
 *   **File I/O**: C++ Standard Library (`<fstream>`) for data persistence.
 
 ## Project Structure
 
-The codebase is organized into logical components to promote modularity and separation of concerns:
+The project follows a clean, modular structure that separates concerns and improves maintainability.
 
-*   `server.cpp`: The entry point for the server application. It initializes Winsock, listens for incoming TCP connections, and spawns a new thread for each client.
-*   `client.cpp`: The entry point for the client application. It connects to the server and provides a command-line interface for users to send commands.
-*   `kvstore.h` / `kvstore.cpp`: A self-contained class that encapsulates all the business logic for the key-value store. It manages the in-memory data, handles thread-safe access, and serializes data to a file. This separation ensures that the core logic is independent of the networking layer.
+```
+.
+├── .gitignore         # Specifies intentionally untracked files to ignore
+├── Makefile           # Automates the build process for the server and client
+├── Readme.md          # Project documentation
+└── src/               # Contains all C++ source code
+    ├── client.cpp     # Entry point and logic for the client application
+    ├── kvstore.cpp    # Implementation of the core KVStore class
+    ├── kvstore.h      # Header file for the KVStore class
+    └── server.cpp     # Entry point and logic for the server application
+```
 
 ## How to Build and Run
 
-This project is designed for a Windows environment and can be compiled using g++.
+This project uses a `Makefile` for easy compilation on both Windows and Unix-like systems (Linux, macOS). The final executables will be placed in a `build/` directory.
 
 ### Prerequisites
 
-*   A C++ compiler that supports C++11 or later (for `std::thread`, `std::shared_mutex`). MinGW-w64 (g++) is a good option.
+*   A C++ compiler that supports C++17 or later (e.g., g++).
+*   The `make` build automation tool. On Windows, this is commonly available through environments like **MinGW-w64** or **MSYS2**.
 
-### Compilation
+### Build Instructions
 
-Open a terminal or command prompt and run the following commands to build the server and client executables:
+Open a terminal or command prompt in the root directory of the project and use the following commands:
 
-```bash
-# Compile the server
-g++ src/server.cpp src/kvstore.cpp -o server -lws2_32
+1.  **To build both the server and client:**
+    ```bash
+    make
+    ```
+    Alternatively, you can use `make all`.
 
-# Compile the client
-g++ src/client.cpp -o client -lws2_32
-```
+2.  **To remove all compiled files and the `build/` directory:**
+    ```bash
+    make clean
+    ```
 
 ### Execution
 
-1.  **Start the Server**: Run the compiled server executable. It will load any existing data from `kvstore.db` and start listening for connections on port 9000.
+1.  **Start the Server**: Run the server executable from the `build` directory. It will load data from `kvstore.db` (if it exists) and start listening on port 9000.
     ```bash
-    ./server.exe
+    # On Windows
+    ./build/server.exe
+
+    # On Linux/macOS
+    ./build/server
     ```
     You should see the output: `Server running on port 9000...`
 
 2.  **Start the Client**: Open one or more new terminal windows and run the client executable.
     ```bash
-    ./client.exe
+    # On Windows
+    ./build/client.exe
+
+    # On Linux/macOS
+    ./build/client
     ```
     The client will connect to the server, and you can start sending commands.
 
-### Architecture
+## Architecture
 
 ```mermaid
 graph TD

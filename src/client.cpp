@@ -4,8 +4,6 @@
 #include <string>
 #include <thread>
 
-#pragma comment(lib, "ws2_32.lib")
-
 using namespace std;
 
 int main(){
@@ -61,7 +59,7 @@ while(true){
 
     }
 
-// Inside your main while loop, after send()
+// Inside main while loop, after send()
 
 char buffer[4096];
 string response_buffer;
@@ -82,7 +80,6 @@ while (response_buffer.find('\n') == string::npos) {
     response_buffer.append(buffer);
 }
 
-// We have a full response, now print it (without the trailing newline)
 cout << "Server: " << response_buffer.substr(0, response_buffer.length() - 1) << endl;
 }
 

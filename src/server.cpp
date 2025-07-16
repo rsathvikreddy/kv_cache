@@ -4,9 +4,8 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include "kvstore.h" // Include our new class header
+#include "kvstore.h"
 
-#pragma comment(lib, "ws2_32.lib")
 
 // The handler now accepts a reference to the KVStore object
 void handle_client(SOCKET client_socket, sockaddr_in client_addr, KVStore& store) {
